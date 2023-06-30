@@ -473,35 +473,6 @@ remotes.CreateServer.OnServerInvoke = function(plr)
 	return code
 end
 
-remotes.ServerTeleport.OnServerInvoke = function(plr, code)
-	if not ownsGamepass(plr) then return end
-	if not datastoreEnabled then return end
-	if sservers[code] then
-		if os.clock() >= sservers[code].expire then
-			pcall(function()
-				servers:RemoveAsync(code)
-			end)
-			return false
-		end
-		teleport:TeleportToPrivateServer(game.PlaceId, sservers[code].server, {plr})
-		return true
-	end
-	local success, found = pcall(function()
-		return servers:GetAsync(code)
-	end)
-	if success then
-		if os.clock() >= found.expire then
-			pcall(function()
-				servers:RemoveAsync(code)
-			end)
-			return false
-		end
-		teleport:TeleportToPrivateServer(game.PlaceId, found.server, {plr})
-		return true
-	end
-	return false
-end
-
 for i,v in next, map:GetDescendants() do 
 	if v.Name == "MORPH" then
 		loadMorph(v.Parent, v.Value)
